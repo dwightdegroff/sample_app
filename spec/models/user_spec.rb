@@ -210,5 +210,15 @@ describe User do
       it { should_not be_following(other_user) }
       its(:followed_users) { should_not include(other_user) }
     end
+    
+    it "should destroy associated microposts" do
+      
+      relationships = @user.relationships.dup
+      @user.destroy
+      relationships.should_not be_empty
+      relationships.each do |relation|
+        Relationship.find_by_id(relation.id).should be_nil
+      end
+    end
   end
 end
